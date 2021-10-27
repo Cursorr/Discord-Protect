@@ -1,0 +1,12 @@
+{   
+    "bot_name": "Discord Protect",
+    "token": "Bot_Token",
+    "prefix": "!",
+    "captcha": {
+        "is_enable": true,
+        "tries": 3,
+        "timeout": 60,
+        "verify_channel": ID,
+        "role_after_captcha": ID
+    }
+}

@@ -1,0 +1,1 @@
+Here i store captchas while the process, then it's deleted automatically 
