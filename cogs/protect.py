@@ -1,3 +1,4 @@
+from copy import Error
 import discord
 import json
 import random
@@ -5,6 +6,7 @@ import string
 import asyncio
 import os
 
+from gtts import gTTS
 from captcha.image import ImageCaptcha
 from discord.ext import commands, tasks
 
@@ -45,39 +47,56 @@ class Captcha(commands.Cog):
         # Generationg the captcha text
         text = ''.join(random.choice(string.ascii_uppercase) for _ in range(6))
 
-        # Creating an image instance
-        captcha = ImageCaptcha(width=300, height=100)
+        captcha_type = captcha_config["type"]
+        if captcha_type == "image":
+            # Creating an image instance
+            captcha = ImageCaptcha(width=300, height=100)
+            extention = "png"
+
+            # Merging image with text 
+            captcha.generate(text)
+
+            # Saving captcha image 
+            captcha.write(text, f"captchas/{member.id}.png")
         
-        # Merging image and text 
-        captcha.generate(text)
+        elif captcha_type == "audio":            
+            # Creating audio file
+            captcha = gTTS(text=' '.join([char for char in text]), lang="en", slow=False)
+            extention = "mp3"
+ 
+            # Saving audio file
+            captcha.save(f"captchas/{member.id}.mp3")
+        
+        else:
+            raise Exception("Invalid Captcha type. Check configuration file.") 
 
-        # Saving captcha image
-        captcha.write(text, f"captchas/{member.id}.png")
-
-        captcha_file = discord.File(f"captchas/{member.id}.png")
-        temp_captcha = await verification_channel.send("Please write the captcha down here.", file=captcha_file) 
+        captcha_file = discord.File(f"captchas/{member.id}.{extention}")
+        temp_captcha = await verification_channel.send(f"Please write the {captcha_type} captcha down here.", file=captcha_file) 
         
         self._captchas[member.id] = temp_captcha
+        self._user_tries[member.id].append(temp_captcha)
 
         try:
-            msg = await self.bot.wait_for('message', 
+            await self.bot.wait_for('message', 
             check=lambda message: message.content.upper() == text and message.author.id == member.id and message.channel == verification_channel, timeout=captcha_config["timeout"])
             
             # Deleting user from cache after succeding the verification phase
             del self._verification_phase[member.id]
             temp_succes_message = await verification_channel.send(f"{member} Just passed the Captcha")
+            self._user_tries[member.id].append(temp_succes_message)
 
             # Deleting captcha img from directory 
-            os.remove(f"captchas/{member.id}.png")
+            os.remove(f"captchas/{member.id}.{extention}")
+
+            # Getting and adding the role after captcha
+            role = discord.utils.get(member.guild.roles, id=captcha_config["role_after_captcha"])
+            await member.add_roles(role)
 
         except asyncio.TimeoutError:
             await member.kick()
 
         # Deleting messages in channel
         await asyncio.sleep(10)
-        
-        await temp_captcha.delete()
-        await temp_succes_message.delete()
 
         for user_try in self._user_tries[member.id]:
             await user_try.delete()
