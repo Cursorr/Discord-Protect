@@ -6,6 +6,10 @@
 
 This repository will be maintained by me, i will add some cool commands which allows you to edit your configuration files from discord, i will also add a cool feature soon `Adding voice captcha`.
 
-# Captcha example
+# Image Captcha example
 
 ![Captcha](https://media.discordapp.net/attachments/902967416156475452/903042282494771270/827279297236435035.png)
+
+# Audio Captcha example
+
+![Captcha](https://discord.com/channels/@me/777225589727297576/903372231898435594)
