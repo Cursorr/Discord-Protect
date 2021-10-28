@@ -1,3 +1,4 @@
 discord
 captcha
+gtts
 discord_slash
