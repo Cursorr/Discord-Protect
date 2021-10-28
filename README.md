@@ -12,4 +12,4 @@ This repository will be maintained by me, i will add some cool commands which al
 
 # Audio Captcha example
 
-![Captcha](https://cdn.discordapp.com/attachments/777225589727297576/903372231630024714/2021-10-28_21-53-38_Trim.mp4)
+![Captcha](https://im6.ezgif.com/tmp/ezgif-6-15dd77ba5dae.gif)
