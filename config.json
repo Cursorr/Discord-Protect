@@ -3,10 +3,11 @@
     "token": "Bot_Token",
     "prefix": "!",
     "captcha": {
+        "type": "audio",
         "is_enable": true,
         "tries": 3,
         "timeout": 60,
-        "verify_channel": ID,
-        "role_after_captcha": ID
+        "verify_channel": 1,
+        "role_after_captcha": 2
     }
 }
