@@ -7,7 +7,7 @@
         "is_enable": true,
         "tries": 3,
         "timeout": 60,
-        "verify_channel": 1,
-        "role_after_captcha": 2
+        "verify_channel": 123,
+        "role_after_captcha": 123
     }
 }
